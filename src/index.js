@@ -46,7 +46,7 @@ app.post('/deposit-crypto', urlencodedParser, async function (req, res) {
 
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
-        network: NETWORKS.COLUMBUS_5,
+        network: NETWORKS.BOMBAY_12,
         privateKey: privateKey.data,
     });
 
@@ -64,7 +64,7 @@ app.post('/withdraw-crypto', urlencodedParser, async function (req, res) {
 
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
-        network: NETWORKS.COLUMBUS_5,
+        network: NETWORKS.BOMBAY_12,
         privateKey: privateKey.data,
     });
 
@@ -83,7 +83,7 @@ app.post('/transfer-crypto', urlencodedParser, function (req, res) {
 
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
-        network: NETWORKS.COLUMBUS_5,
+        network: NETWORKS.BOMBAY_12,
         privateKey: privateKey.data,
     });
 
@@ -103,7 +103,7 @@ app.post('/wallet-balance', urlencodedParser, async function (req, res) {
 
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
-        network: NETWORKS.COLUMBUS_5,
+        network: NETWORKS.BOMBAY_12,
         privateKey: privateKey.data,
     });
 
