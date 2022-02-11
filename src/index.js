@@ -112,7 +112,7 @@ app.post('/wallet-balance', urlencodedParser, async function (req, res) {
     });   
     
     console.log(userBalance);
-    res.end(userBalance);
+    res.end(JSON.stringify(userBalance));
 });
 
 app.listen(3000)
