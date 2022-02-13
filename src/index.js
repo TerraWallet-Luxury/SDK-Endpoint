@@ -25,7 +25,7 @@ app.get('/create-wallet', function (req, res) {
 })
 
 // Ready to go!
-app.get('/recover-wallet', function (req, res) {
+app.post('/recover-wallet', urlencodedParser, function (req, res) {
     res.setHeader('Content-Type', 'application/json');
 
     const { mnemonicWords } = req.query;
