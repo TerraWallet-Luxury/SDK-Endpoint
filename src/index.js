@@ -25,29 +25,34 @@ app.get('/create-wallet', function (req, res) {
 })
 
 // Ready to go!
-app.post('/recover-wallet', urlencodedParser, function (req, res) {
-    res.setHeader('Content-Type', 'application/json');
-
-    const { mnemonicWords } = req.query;
-
-    const account = new MnemonicKey({
-        mnemonic: mnemonicWords,
-    });
-
-    res.json({
-        privateKey: account.privateKey,
-        walletAddress: account.accAddress
-    });
-});
-
-// Ready to go!
-app.post('/deposit-crypto', urlencodedParser, async function (req, res) {  
-    const { privateKey, amount, currency = DENOMS.UST} = req.body;
+app.post('/recover-wallet', urlencodedParser, async function (req, res) {
+    const { mnemonic } = req.body;
 
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
         network: NETWORKS.COLUMBUS_5,
-        privateKey: privateKey.data,
+        mnemonic: mnemonic
+    });
+
+    const userBalance = await anchorEarn.balance({
+        currencies: [DENOMS.UST],
+    });   
+
+    res.end(
+        JSON.stringify({
+            address: userBalance.address,
+        })
+    );
+});
+
+// Ready to go!
+app.post('/deposit-crypto', urlencodedParser, async function (req, res) {  
+    const { mnemonic, amount, currency = DENOMS.UST} = req.body;
+
+    const anchorEarn = new AnchorEarn({
+        chain: CHAINS.TERRA,
+        network: NETWORKS.COLUMBUS_5,
+        mnemonic: mnemonic
     });
 
     const depositResponse = await anchorEarn.deposit({
@@ -60,12 +65,12 @@ app.post('/deposit-crypto', urlencodedParser, async function (req, res) {
 
 // Ready to go!
 app.post('/withdraw-crypto', urlencodedParser, async function (req, res) {  
-    const { privateKey, amount, currency = DENOMS.UST} = req.body;
+    const { mnemonic, amount, currency = DENOMS.UST} = req.body;
 
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
         network: NETWORKS.COLUMBUS_5,
-        privateKey: privateKey.data,
+        mnemonic: mnemonic
     });
 
     try{
@@ -83,12 +88,12 @@ app.post('/withdraw-crypto', urlencodedParser, async function (req, res) {
 
 // Ready to go!
 app.post('/transfer-crypto', urlencodedParser, async function (req, res) {  
-    const { privateKey, amount, walletTarget, currency = DENOMS.UST } = req.body;
+    const { mnemonic, amount, walletTarget, currency = DENOMS.UST } = req.body;
 
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
         network: NETWORKS.COLUMBUS_5,
-        privateKey: privateKey.data,
+        mnemonic: mnemonic
     });
 
     const response = await anchorEarn.send({
@@ -103,12 +108,13 @@ app.post('/transfer-crypto', urlencodedParser, async function (req, res) {
 
 // Ready to go!
 app.post('/wallet-balance', urlencodedParser, async function (req, res) {  
-    const { privateKey } = req.body;
+    const { mnemonic } = req.body;
 
+    // console.log(req.body);
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
         network: NETWORKS.COLUMBUS_5,
-        privateKey: privateKey.data,
+        mnemonic: mnemonic
     });
 
     const userBalance = await anchorEarn.balance({
@@ -120,12 +126,12 @@ app.post('/wallet-balance', urlencodedParser, async function (req, res) {
 });
 
 app.post('/market-information', urlencodedParser, async function (req, res) {  
-    const { privateKey } = req.body;
+    const { mnemonic } = req.body;
 
     const anchorEarn = new AnchorEarn({
         chain: CHAINS.TERRA,
         network: NETWORKS.COLUMBUS_5,
-        privateKey: privateKey.data,
+        mnemonic: mnemonic
     });
 
     const userBalance = await anchorEarn.market({
