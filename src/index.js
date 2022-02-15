@@ -52,7 +52,7 @@ app.post('/deposit-crypto', urlencodedParser, async function (req, res) {
 
     const depositResponse = await anchorEarn.deposit({
         amount: amount,
-        currency:currency,
+        currency: currency,
     });
 
     res.end(JSON.stringify(depositResponse));  
@@ -68,17 +68,21 @@ app.post('/withdraw-crypto', urlencodedParser, async function (req, res) {
         privateKey: privateKey.data,
     });
 
-    const withdrawResponse = await anchorEarn.withdraw({
-        amount: amount,
-        currency:currency,
-    });
+    try{
+        const withdrawResponse = await anchorEarn.withdraw({
+            amount: amount,
+            currency:currency,
+        });
+        console.log(withdrawResponse);  
+        res.end(JSON.stringify(withdrawResponse));  
+    } catch (e)  {
+        console.log(e.message );
+    }
     
-    console.log(withdrawResponse);  
-    res.end(JSON.stringify(withdrawResponse));  
 }) 
 
 // Ready to go!
-app.post('/transfer-crypto', urlencodedParser, function (req, res) {  
+app.post('/transfer-crypto', urlencodedParser, async function (req, res) {  
     const { privateKey, amount, walletTarget, currency = DENOMS.UST } = req.body;
 
     const anchorEarn = new AnchorEarn({
@@ -87,7 +91,7 @@ app.post('/transfer-crypto', urlencodedParser, function (req, res) {
         privateKey: privateKey.data,
     });
 
-    anchorEarn.send({
+    const response = await anchorEarn.send({
         currency: currency,
         recipient: walletTarget,
         amount: amount
@@ -108,6 +112,23 @@ app.post('/wallet-balance', urlencodedParser, async function (req, res) {
     });
 
     const userBalance = await anchorEarn.balance({
+        currencies: [DENOMS.UST],
+    });   
+    
+    console.log(userBalance);
+    res.end(JSON.stringify(userBalance));
+});
+
+app.post('/market-information', urlencodedParser, async function (req, res) {  
+    const { privateKey } = req.body;
+
+    const anchorEarn = new AnchorEarn({
+        chain: CHAINS.TERRA,
+        network: NETWORKS.COLUMBUS_5,
+        privateKey: privateKey.data,
+    });
+
+    const userBalance = await anchorEarn.market({
         currencies: [DENOMS.UST],
     });   
     
