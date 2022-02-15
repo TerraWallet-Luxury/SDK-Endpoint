@@ -83,10 +83,9 @@ app.post('/withdraw-crypto', urlencodedParser, async function (req, res) {
             amount: amount,
             currency:currency,
         });
-        console.log(withdrawResponse);  
         res.end(JSON.stringify(withdrawResponse));  
     } catch (e)  {
-        console.log(e.message );
+        res.end(JSON.stringify({error: e.message}));
     }
     
 }) 
