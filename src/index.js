@@ -55,12 +55,17 @@ app.post('/deposit-crypto', urlencodedParser, async function (req, res) {
         mnemonic: mnemonic
     });
 
-    const depositResponse = await anchorEarn.deposit({
-        amount: amount,
-        currency: currency,
-    });
+    try{
+        const depositResponse = await anchorEarn.deposit({
+            amount: amount,
+            currency: currency,
+        });
+        res.end(JSON.stringify(depositResponse));  
+    }catch(e){
+        res.end(JSON.stringify({error: e.message}));
+    }
 
-    res.end(JSON.stringify(depositResponse));  
+
 })  
 
 // Ready to go!
